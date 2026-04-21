@@ -1,0 +1,47 @@
+name: "Manage GitHub org permissions as YAML"
+description: Sync GitHub organization permissions from a YAML config using a GitHub App.
+
+branding:
+  icon: shield
+  color: gray-dark
+
+inputs:
+  app-id:
+    description: GitHub App ID
+    required: true
+  app-private-key:
+    description: GitHub App private key (.pem content)
+    required: true
+  installation-id:
+    description: GitHub App installation ID on the organization
+    required: true
+  config-file:
+    description: Path to the permissions config file
+    required: false
+    default: gorg.yaml
+  report-file:
+    description: Path to write the generated markdown report
+    required: false
+    default: gorg.md
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install -r ${{ github.action_path }}/requirements.txt
+
+    - name: Sync permissions
+      shell: bash
+      env:
+        GORG_APP_ID: ${{ inputs.app-id }}
+        GORG_APP_PRIVATE_KEY: ${{ inputs.app-private-key }}
+        GORG_INSTALLATION_ID: ${{ inputs.installation-id }}
+        GORG_CONFIG_FILE: ${{ inputs.config-file }}
+        GORG_REPORT_FILE: ${{ inputs.report-file }}
+      run: python ${{ github.action_path }}/sync.py
