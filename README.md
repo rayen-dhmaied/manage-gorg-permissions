@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Sync permissions
-        uses: your-org/manage-gorg-permissions@v1
+        uses: rayen-dhmaied/manage-gorg-permissions@v1
         with:
           app-id: ${{ secrets.GORG_APP_ID }}
           app-private-key: ${{ secrets.GORG_APP_PRIVATE_KEY }}
